@@ -2,17 +2,17 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-
+ 
 #define STACK_INIT_SIZE 20
 #define STACKINCREMENT  10
 char OP[]={'+','-','*','/','(',')','='};
 typedef char ElemType;
 struct node
 {
-	int coef;    //ÏµÊı  
-	int exp;   //Ö¸Êı  
-	struct node * next;//Ö¸ÕëÓò
-}chainLink;//´´½¨chainLinkµÄnode½áµã¶ÔÏó
+    int coef;    //ç³»æ•°
+    int exp;   //æŒ‡æ•°
+    struct node * next;//æŒ‡é’ˆåŸŸ
+}chainLink;//åˆ›å»ºchainLinkçš„nodeç»“ç‚¹å¯¹è±¡
 typedef struct
 {
     ElemType *base;
@@ -25,7 +25,7 @@ typedef struct
     int *top;
     int stackSize;
 }SqStack;
-
+ 
 void InitStack(sqStack *s)
 {
     s->base = (ElemType *)malloc(STACK_INIT_SIZE * sizeof(ElemType));
@@ -33,11 +33,11 @@ void InitStack(sqStack *s)
     {
         exit(0);
     }
-	
+ 
     s->top = s->base;
     s->stackSize = STACK_INIT_SIZE;
 }
-
+ 
 void initStack(SqStack *s)
 {
     s->base = (int *)malloc(STACK_INIT_SIZE * sizeof(int));
@@ -45,11 +45,11 @@ void initStack(SqStack *s)
     {
         exit(0);
     }
-	
+ 
     s->top = s->base;
     s->stackSize = STACK_INIT_SIZE;
 }
-
+ 
 void Push(sqStack *s, ElemType e)
 {
     if( s->top - s->base >= s->stackSize )
@@ -60,11 +60,11 @@ void Push(sqStack *s, ElemType e)
             exit(0);
         }
     }
-	
+ 
     *(s->top) = e;
     s->top++;
 }
-
+ 
 void Pop(sqStack *s, ElemType *e)
 {
     if( s->top == s->base )
@@ -73,7 +73,7 @@ void Pop(sqStack *s, ElemType *e)
     }
     *e = *--(s->top);
 }
-
+ 
 void push(SqStack *s, int e)
 {
     if( s->top - s->base >= s->stackSize )
@@ -84,11 +84,11 @@ void push(SqStack *s, int e)
             exit(0);
         }
     }
-	
+ 
     *(s->top) = e;
     s->top++;
 }
-
+ 
 void pop(SqStack *s, int *e)
 {
     if( s->top == s->base )
@@ -97,568 +97,566 @@ void pop(SqStack *s, int *e)
     }
     *e = *--(s->top);
 }
-
+ 
 int StackLen(sqStack s)
 {
     return (s.top - s.base);
 }
-
+ 
 int stackLen(SqStack s)
 {
     return (s.top - s.base);
 }
-
+ 
 char  GetTop(sqStack *s)
 {
-	char e;
-	if(s->top == s->base)   
-		return -1;
-	e = *(s->top-1);
-	return e;
+    char e;
+    if(s->top == s->base)
+        return -1;
+    e = *(s->top-1);
+    return e;
 }
-
+ 
 int  getTop(SqStack *s)
 {
-	int e;
-	if(s->top == s->base)   
-		return -1;
-	e = *(s->top-1);
-	return e;
+    int e;
+    if(s->top == s->base)
+        return -1;
+    e = *(s->top-1);
+    return e;
 }
 int judge(char theta)
-{	
-	int i;
-	if(theta == '+')
-		i=0;
-	else if(theta == '-')
-		i=1;
-	else if(theta == '*')
-		i=2;
-	else if(theta == '/')
-		i=3;
-	else if(theta == '(')
-		i=4;
-	else if(theta == ')')
-		i=5;
-	else
-		i=6;
-	return i;
+{
+    int i;
+    if(theta == '+')
+        i=0;
+    else if(theta == '-')
+        i=1;
+    else if(theta == '*')
+        i=2;
+    else if(theta == '/')
+        i=3;
+    else if(theta == '(')
+        i=4;
+    else if(theta == ')')
+        i=5;
+    else
+        i=6;
+    return i;
 }
 int precede(char theta1,char theta2)
 {
-	int  std_cherry[7][7]=
-	{
-		
-		1, 1,-1,-1,-1, 1, 1,
-			1, 1,-1,-1,-1, 1, 1,
-			1, 1, 1, 1,-1, 1, 1,
-			1, 1, 1, 1,-1, 1, 1,
-			-1,-1,-1,-1,-1, 0,-2,
-			1, 1, 1, 1,-2, 1, 1,
-			-1,-1,-1,-1,-1,-2, 0,
-	};
-	int i,j;
-	i = judge(theta1);
-	j = judge(theta2);
-	return std_cherry[i][j];
+    int  std_cherry[7][7]=
+            {
+ 
+                    1, 1,-1,-1,-1, 1, 1,
+                    1, 1,-1,-1,-1, 1, 1,
+                    1, 1, 1, 1,-1, 1, 1,
+                    1, 1, 1, 1,-1, 1, 1,
+                    -1,-1,-1,-1,-1, 0,-2,
+                    1, 1, 1, 1,-2, 1, 1,
+                    -1,-1,-1,-1,-1,-2, 0,
+            };
+    int i,j;
+    i = judge(theta1);
+    j = judge(theta2);
+    return std_cherry[i][j];
 }
 int OPerate(int a,char theta,int b)
 {
-	int result;
-	switch(theta)
-	{
-	case '+':
-		result = a+b;
-		break;
-	case '-':
-		result = a-b;
-		break;
-	case '*':
-		result = a*b;
-		break;
-	case '/':
-		result = a/b;
-		break;
-	}
-	return result;
+    int result;
+    switch(theta)
+    {
+        case '+':
+            result = a+b;
+            break;
+        case '-':
+            result = a-b;
+            break;
+        case '*':
+            result = a*b;
+            break;
+        case '/':
+            result = a/b;
+            break;
+    }
+    return result;
 }
 int In(char *c,char *OP)
 {
-	int i,comp = 0;
-	for(i = 0; i < 7; i++)
-	{
-		if( c[0] == OP[i])
-			comp = 1;
-	}
-	return comp;
+    int i,comp = 0;
+    for(i = 0; i < 7; i++)
+    {
+        if( c[0] == OP[i])
+            comp = 1;
+    }
+    return comp;
 }
-
+ 
 int EvaluateEcpression()
 {
-	sqStack OPTR;
-	SqStack OPND;
-	char c[10],theta,x;
-	int a,b,put;
-	InitStack(&OPTR);	
-	Push(&OPTR,'=');
-	initStack(&OPND);	
-	scanf("%s",c);	
-	while(c[0] != '=' || GetTop(&OPTR) != '=')
-	{
-		if(!In(c,OP))	
-		{
-			put = atoi(c);
-			//	printf("%d\n",put);
-			push(&OPND,put);
-			scanf("%s",c);
-		}
-		else 
-			switch(precede(GetTop(&OPTR),c[0]))
-		{
-				case -1:
-					Push(&OPTR,c[0]); 
-					scanf("%s",c);
-					break;
-				case 0:
-					Pop(&OPTR,&x); 
-					scanf("%s",c);
-					break;
-				case 1: 
-					Pop(&OPTR,&theta);
-					pop(&OPND,&b); 
-					pop(&OPND,&a);
-					push(&OPND,OPerate(a,theta,b));
-					//				printf("%d\n",OPerate(a,theta,b));
-					
-					break;
-		} 
-		
-	}
-    return getTop(&OPND);	
+    sqStack OPTR;
+    SqStack OPND;
+    char c[10],theta,x;
+    int a,b,put;
+    InitStack(&OPTR);
+    Push(&OPTR,'=');
+    initStack(&OPND);
+    scanf("%s",c);
+    while(c[0] != '=' || GetTop(&OPTR) != '=')
+    {
+        if(!In(c,OP))
+        {
+            put = atoi(c);
+            //	printf("%d\n",put);
+            push(&OPND,put);
+            scanf("%s",c);
+        }
+        else
+            switch(precede(GetTop(&OPTR),c[0]))
+            {
+                case -1:
+                    Push(&OPTR,c[0]);
+                    scanf("%s",c);
+                    break;
+                case 0:
+                    Pop(&OPTR,&x);
+                    scanf("%s",c);
+                    break;
+                case 1:
+                    Pop(&OPTR,&theta);
+                    pop(&OPND,&b);
+                    pop(&OPND,&a);
+                    push(&OPND,OPerate(a,theta,b));
+                    //				printf("%d\n",OPerate(a,theta,b));
+ 
+                    break;
+            }
+ 
+    }
+    return getTop(&OPND);
 }
-
-
+ 
+//äºŒè¿›åˆ¶åˆ°åè¿›åˆ¶
 void BtoD()
 {
     ElemType c;
     sqStack s;
     int len, i, sum = 0;
-	
+ 
     InitStack(&s);
-	
-    printf("ÇëÊäÈë¶ş½øÖÆÊı£¬ÊäÈë#·ûºÅ±íÊ¾½áÊø£¡\n");
+ 
+    printf("è¯·è¾“å…¥äºŒè¿›åˆ¶æ•°ï¼Œè¾“å…¥#ç¬¦å·è¡¨ç¤ºç»“æŸï¼\n");
     scanf("%c", &c);
     while( c != '#' )
     {
         Push(&s, c);
         scanf("%c", &c);
     }
-	
-    getchar();  // °Ñ'\n'´Ó»º³åÇøÈ¥µô
-	
+ 
+    getchar();  // æŠŠ'\n'ä»ç¼“å†²åŒºå»æ‰
+ 
     len = StackLen(s);
-    printf("Õ»µÄµ±Ç°ÈİÁ¿ÊÇ: %d\n", len);
-	
+    printf("æ ˆçš„å½“å‰å®¹é‡æ˜¯: %d\n", len);
+ 
     for( i=0; i < len-1; i++ )
     {
         Pop(&s, &c);
         sum = sum + (c-48) * pow(2, i);
     }
-	
-    printf("×ª»¯ÎªÊ®½øÖÆÊıÊÇ: %d\n", sum);
-	
-    return 0;
+ 
+    printf("è½¬åŒ–ä¸ºåè¿›åˆ¶æ•°æ˜¯: %d\n", sum);
+ 
 }
-
-
+ 
+//åè¿›åˆ¶åˆ°äºŒè¿›åˆ¶
 void DtoB()
 {
-	int  c,d;
+    int  c,d;
     SqStack s;
     int len, i;
-	
-    InitStack(&s);
-	
-	printf("ÇëÊäÈëÊ®½øÖÆÊı: ");
+ 
+    initStack(&s);
+ 
+    printf("è¯·è¾“å…¥åè¿›åˆ¶æ•°: ");
     scanf("%d", &c);
-	printf("×ª»¯Îª¶ş½øÖÆÊıÊÇ: "); 
-	while(c > 0)
+    printf("è½¬åŒ–ä¸ºäºŒè¿›åˆ¶æ•°æ˜¯: ");
+    while(c > 0)
     {
-		//	printf("%d",c%2);
+        //	printf("%d",c%2);
         push(&s, c%2);
-		c = c - c%2;
-		c = c/2;
+        c = c - c%2;
+        c = c/2;
     }
-	
-	len = stackLen(s);
-	for(i = 0; i < len; i++)
-	{
-		pop(&s,&d);
-		printf("%d",d);
-	}
-	printf("\nÕ»µÄµ±Ç°ÈİÁ¿ÊÇ: %d\n", len);
-	
-    return 0;
+ 
+    len = stackLen(s);
+    for(i = 0; i < len; i++)
+    {
+        pop(&s,&d);
+        printf("%d",d);
+    }
+    printf("\næ ˆçš„å½“å‰å®¹é‡æ˜¯: %d\n", len);
+ 
 }
-
-
+ 
+//å…«è¿›åˆ¶åˆ°åå…­è¿›åˆ¶
 void OtoH()
-{  
-	
-	int i,j,k,s=0; 
-	int a;
-	char p[30];  
-	int result=0;  
-	printf("ÊäÈëÄãÏëÒª×ª»¯µÄ°Ë½øÖÆÊı: \n");
-	scanf("%d",&a);
-	for(i=1;a!=0;i*=8)  
-	{  
-		if(a%10>7)  
-		{   
-			s=1;  
-			break;  
-		}  
-		else  
-		{  
-			result+=(a%10)*i;  
-			a=a/10;  
-		}  
-	}  
-	for(j=0;result!=0;j++)  
-	{  
-		p[j]=result%16;  
-		result=result/16;  
-		if(p[j]<10)  
-			p[j]+=48;  
-		else  
-		{  
-			switch(p[j])  
-			{  
-			case 10: p[j]='A';  
-				break;  
-			case 11: p[j]='B';  
-				break;  
-			case 12:    p[j]='C';  
-				break;  
-			case 13:    p[j]='D';  
-				break;  
-			case 14:    p[j]='E';  
-				break;  
-			case 15:    p[j]='F';  
-				break;  
-			}  
-		}  
-	}  
-	if(s==1)  
-		printf("ÄúµÄÊäÈëÓĞÎó£¡ÇëÖØĞÂÊäÈë\n");  
-	else   
-	{  
-		printf("\n×ª»»ºóµÄÊıÎª£º");  
-		for(k=j-1;k>=0;k--)  
-		{  
-			printf("%c",p[k]);  
-		}  
-		printf("\n");  
-	}  
-}  
-
-void HtoO()
-{ 	
-	int i,j,k,s=0;  
-	char a[10];
-	int result=0;  
-	int b[30];  
-	int p[30]; 
-	scanf("%s",&a);
-	for(k=0;;k++)  
-	{  
-		if(a[k]=='\0')  
-			break;  
-	}  
-	
-	for(i=0;i<k;i++)  
-	{  
-		if(a[i]<='9'&&a[i]>='1')  
-			b[i]=a[i]-48;  
-		else  
-		{  
-			switch(a[i])  
-			{  
-			case 'A': b[i]=10;  
-				break;  
-			case 'B': b[i]=11;  
-				break;  
-			case 'C':   b[i]=12;  
-				break;  
-			case 'D':   b[i]=13;  
-				break;  
-			case 'E':   b[i]=14;  
-				break;  
-			case 'F':   b[i]=15;  
-				break;  
-			case 'a': b[i]=10;  
-				break;  
-			case 'b': b[i]=11;  
-				break;  
-			case 'c':   b[i]=12;  
-				break;  
-			case 'd':   b[i]=13;  
-				break;  
-			case 'e':   b[i]=14;  
-				break;  
-			case 'f':   b[i]=15;  
-				break;  
-			default: s=1;  
-			}  
-		}  
-	}  
-	for(j=k-1,i=1;j>=0;j--,i*=16)  
-	{  
-		result+=b[j]*i;  
-	}  
-	for(j=0;result!=0;j++)  
-	{  
-		p[j]=result%8;  
-		result=result/8;  
-	}  
-	if(s==1)  
-		printf("ÄúµÄÊäÈëÓĞÎó£¡ÇëÖØĞÂÊäÈë\n");  
-	else   
-	{  
-		printf("\n×ª»»ºóµÄÊıÎª£º");  
-		for(k=j-1;k>=0;k--)  
-		{  
-			printf("%d",p[k]);  
-		}  
-		printf("\n");  
-	}  
-} 
-
-
-struct node *create()                    //¶¨Òå½¨Á¢¶àÏîÊ½º¯Êı£¬²¢·µ»ØÁ´±íÍ·Ö¸Õë
 {
-	struct node *h = NULL, *q, *p;//¶¨Òå½á¹¹ÌåÍ·Ö¸Õëh£¬±ê¼ÇÖ¸ÕëpºÍq£¬pÊÇ´´ÔìĞÂ½ÚµãµÄ±ê¼ÇÖ¸Õë£¬qÊÇÁ´½ÓÁ´±íµÄÖ¸Õë£»
-	int i = 1, N;                             //¶¨Òå¶àÏîÊ½µÄÏîÊıN¼°±ê¼ÇÊıi
-	printf("ÇëÊäÈë¶àÏîÊ½µÄÏîÊı: ");
-	scanf("%d",&N);
-	p = 0;//Ö¸Õë³õÊ¼»¯£»
-	q = 0;//±¾µØÖ¸Õë³õÊ¼»¯£»
-	for (; i <= N; i++)
-	{
-		p = (struct node *)malloc(sizeof(chainLink));            //ÎªÒ»¸öĞÂ½Úµã·ÖÅä¿Õ¼ä
-		printf("ÇëÊäÈëµÚ %i ÏîµÄÏµÊı£º\t",i);
-		scanf("%d",&(*p).coef);
-		printf("ÇëÊäÈëµÚ %i ÏîµÄÖ¸Êı: \t",i);
-		scanf("%d",&(*p).exp);
-		if (i == 1) { h = p; q = p; }                           //½¨Á¢Í·½Úµã
-		else
-		{
-			q->next = p;
-			q = p;
-		}
-	}
-	q->next = NULL;//p,q¶¼³ÉÎªĞÂÁ´±íµÄÎ²Ö¸Õë£»
-	p->next = NULL;
-	return h;
+ 
+    int i,j,k,s=0;
+    int a;
+    char p[30];
+    int result=0;
+    printf("è¾“å…¥ä½ æƒ³è¦è½¬åŒ–çš„å…«è¿›åˆ¶æ•°: \n");
+    scanf("%d",&a);
+    for(i=1;a!=0;i*=8)
+    {
+        if(a%10>7)
+        {
+            s=1;
+            break;
+        }
+        else
+        {
+            result+=(a%10)*i;
+            a=a/10;
+        }
+    }
+    for(j=0;result!=0;j++)
+    {
+        p[j]=result%16;
+        result=result/16;
+        if(p[j]<10)
+            p[j]+=48;
+        else
+        {
+            switch(p[j])
+            {
+                case 10: p[j]='A';
+                    break;
+                case 11: p[j]='B';
+                    break;
+                case 12:    p[j]='C';
+                    break;
+                case 13:    p[j]='D';
+                    break;
+                case 14:    p[j]='E';
+                    break;
+                case 15:    p[j]='F';
+                    break;
+            }
+        }
+    }
+    if(s==1)
+        printf("æ‚¨çš„è¾“å…¥æœ‰è¯¯ï¼è¯·é‡æ–°è¾“å…¥\n");
+    else
+    {
+        printf("\nè½¬æ¢åçš„æ•°ä¸ºï¼š");
+        for(k=j-1;k>=0;k--)
+        {
+            printf("%c",p[k]);
+        }
+        printf("\n");
+    }
+}
+//åå…­è¿›åˆ¶åˆ°å…«è¿›åˆ¶
+void HtoO()
+{
+    int i,j,k,s=0;
+    char a[10];
+    int result=0;
+    int b[30];
+    int p[30];
+    scanf("%s",&a);
+    for(k=0;;k++)
+    {
+        if(a[k]=='\0')
+            break;
+    }
+ 
+    for(i=0;i<k;i++)
+    {
+        if(a[i]<='9'&&a[i]>='1')
+            b[i]=a[i]-48;
+        else
+        {
+            switch(a[i])
+            {
+                case 'A': b[i]=10;
+                    break;
+                case 'B': b[i]=11;
+                    break;
+                case 'C':   b[i]=12;
+                    break;
+                case 'D':   b[i]=13;
+                    break;
+                case 'E':   b[i]=14;
+                    break;
+                case 'F':   b[i]=15;
+                    break;
+                case 'a': b[i]=10;
+                    break;
+                case 'b': b[i]=11;
+                    break;
+                case 'c':   b[i]=12;
+                    break;
+                case 'd':   b[i]=13;
+                    break;
+                case 'e':   b[i]=14;
+                    break;
+                case 'f':   b[i]=15;
+                    break;
+                default: s=1;
+            }
+        }
+    }
+    for(j=k-1,i=1;j>=0;j--,i*=16)
+    {
+        result+=b[j]*i;
+    }
+    for(j=0;result!=0;j++)
+    {
+        p[j]=result%8;
+        result=result/8;
+    }
+    if(s==1)
+        printf("æ‚¨çš„è¾“å…¥æœ‰è¯¯ï¼è¯·é‡æ–°è¾“å…¥\n");
+    else
+    {
+        printf("\nè½¬æ¢åçš„æ•°ä¸ºï¼š");
+        for(k=j-1;k>=0;k--)
+        {
+            printf("%d",p[k]);
+        }
+        printf("\n");
+    }
+}
+ 
+ 
+struct node *create()                    //å®šä¹‰å»ºç«‹å¤šé¡¹å¼å‡½æ•°ï¼Œå¹¶è¿”å›é“¾è¡¨å¤´æŒ‡é’ˆ
+{
+    struct node *h = NULL, *q, *p;//å®šä¹‰ç»“æ„ä½“å¤´æŒ‡é’ˆhï¼Œæ ‡è®°æŒ‡é’ˆpå’Œqï¼Œpæ˜¯åˆ›é€ æ–°èŠ‚ç‚¹çš„æ ‡è®°æŒ‡é’ˆï¼Œqæ˜¯é“¾æ¥é“¾è¡¨çš„æŒ‡é’ˆï¼›
+    int i = 1, N;                             //å®šä¹‰å¤šé¡¹å¼çš„é¡¹æ•°NåŠæ ‡è®°æ•°i
+    printf("è¯·è¾“å…¥å¤šé¡¹å¼çš„é¡¹æ•°: ");
+    scanf("%d",&N);
+    p = 0;//æŒ‡é’ˆåˆå§‹åŒ–ï¼›
+    q = 0;//æœ¬åœ°æŒ‡é’ˆåˆå§‹åŒ–ï¼›
+    for (; i <= N; i++)
+    {
+        p = (struct node *)malloc(sizeof(chainLink));            //ä¸ºä¸€ä¸ªæ–°èŠ‚ç‚¹åˆ†é…ç©ºé—´
+        printf("è¯·è¾“å…¥ç¬¬ %i é¡¹çš„ç³»æ•°ï¼š\t",i);
+        scanf("%d",&(*p).coef);
+        printf("è¯·è¾“å…¥ç¬¬ %i é¡¹çš„æŒ‡æ•°: \t",i);
+        scanf("%d",&(*p).exp);
+        if (i == 1) { h = p; q = p; }                           //å»ºç«‹å¤´èŠ‚ç‚¹
+        else
+        {
+            q->next = p;
+            q = p;
+        }
+    }
+    q->next = NULL;//p,qéƒ½æˆä¸ºæ–°é“¾è¡¨çš„å°¾æŒ‡é’ˆï¼›
+    p->next = NULL;
+    return h;
 }
 void display(struct node  *h)
 {
-	struct node *p;                 //¶¨Òå±ê¼ÇÖ¸Õë£¬Êä³öÁ´±í
-	p = h;
-	while (p != NULL)
-	{
-		if (p->coef == 0)
-		{
-			struct node *d;
-			d = h;
-			while (d->next != p)
-			{
-				d = d->next;
-			}
-			d->next = p->next;
-			p = p->next;//É¾È¥ÏµÊıÎª0µÄ½Úµã£»
-		}
-		else
-		{
-			if (p->coef<0)                 //ÏµÊıÎª¸ºÊ±Ó¦¼ÓÉÏÀ¨ºÅ,ÈÃÊ½×ÓÈİÒ×¿´Çå£»
-			{
-				if (p->exp == 0) printf("%d+",(*p).coef);
-				else printf("(%d)*X^%d+",(*p).coef,(*p).exp);
-			}
-			else
-			{
-				if (p->exp == 0) printf("%d+",(*p).coef);
-				else if (p->exp!=0&&p->exp!=1)
-				{
-					printf("%d*X^%d+",(*p).coef,(*p).exp);
-				}
-				else printf("%d*X+",(*p).coef);
-			}
-			p = p->next;
-		}
-	}
-	printf("\b \b \n");
-	
+    struct node *p;                 //å®šä¹‰æ ‡è®°æŒ‡é’ˆï¼Œè¾“å‡ºé“¾è¡¨
+    p = h;
+    while (p != NULL)
+    {
+        if (p->coef == 0)
+        {
+            struct node *d;
+            d = h;
+            while (d->next != p)
+            {
+                d = d->next;
+            }
+            d->next = p->next;
+            p = p->next;//åˆ å»ç³»æ•°ä¸º0çš„èŠ‚ç‚¹ï¼›
+        }
+        else
+        {
+            if (p->coef<0)                 //ç³»æ•°ä¸ºè´Ÿæ—¶åº”åŠ ä¸Šæ‹¬å·,è®©å¼å­å®¹æ˜“çœ‹æ¸…ï¼›
+            {
+                if (p->exp == 0) printf("%d+",(*p).coef);
+                else printf("(%d)*X^%d+",(*p).coef,(*p).exp);
+            }
+            else
+            {
+                if (p->exp == 0) printf("%d+",(*p).coef);
+                else if (p->exp!=0&&p->exp!=1)
+                {
+                    printf("%d*X^%d+",(*p).coef,(*p).exp);
+                }
+                else printf("%d*X+",(*p).coef);
+            }
+            p = p->next;
+        }
+    }
+    printf("\b \b \n");
+ 
 }
-struct node *order(struct node *h)     //¶¨ÒåÅÅĞòº¯Êı£¬²¢·µ»ØÕûÀíºóµÄÁ´±íµÄÍ·Ö¸Õë
+struct node *order(struct node *h)     //å®šä¹‰æ’åºå‡½æ•°ï¼Œå¹¶è¿”å›æ•´ç†åçš„é“¾è¡¨çš„å¤´æŒ‡é’ˆ
 {
-	struct node *p, *q, *t, *h1, *h2;       //¶¨ÒåÈı¸ö½á¹¹Ìå±ê¼ÇÖ¸ÕëºÍÁ½¸öÍ·Ö¸Õë
-	h1 = h;              //½¨Á¢Ò»¸öĞÂµÄÁ´±í£¬Í·Ö¸ÕëÎªh£¬Ö¸ÏòÔ­Á´±íµÄµÚÒ»¸ö½Úµã£¬Ö®ºó½«Ô­Á´±íÖĞµÄ½ÚµãÒ»¸öÒ»¸öµÄ²åÈë´ËÁ´±í£¬½øĞĞÅÅĞò
-	h2 = h1->next;                      //½«Ô­À´µÄÁ´±í½¨Á¢³É´ıÅÅĞòÁ´±í
-	h1->next = NULL;                    //½Ø¶ÏµÚÒ»¸öÔ­Á´±íÖĞµÄ½Úµã
-	while (h2 != NULL)
-	{
-		q = h1;
-		p = q->next;
-		t = h2;                  //´Ó´ıÅÅĞòÁ´±íÖĞÑ¡³öÒ»¸ö½Úµã×¼±¸²åÈëµ½ĞÂÁ´±íÖĞ
-		h2 = h2->next;           //ÒÆ¶¯´ıÅÅĞòÁ´±íµÄÍ·Ö¸Õë£¬±ãÓÚ½øĞĞÏÂÒ»´ÎÌôÑ¡
-		t->next = NULL;
-		if (t->exp>q->exp)            //Ó¦²åÈëÍ·Ö¸ÕëÖ®Ç°µÄÇé¿ö
-		{
-			t->next = q;
-			h1 = t;
-			continue;
-		}
-		if (p == NULL&&t->exp <= q->exp) q->next = t;     //Ó¦²åÈë±íÎ²µÄÇé¿ö
-		while (p != NULL)
-		{
-			if (t->exp>p->exp)
-			{
-				q->next = t;
-				t->next = p;
-				break;
-			}
-			else
-			{
-				q = q->next;
-				p = p->next;
-			}
-		}
-		if (p == NULL) q->next = t;
-	}
-	return h1;                //ĞÂÁ´±í¼´Îª°´½µÃİË³ĞòÅÅºÃµÄÁ´±í£¬·µ»ØÆäÍ·Ö¸Õë
+    struct node *p, *q, *t, *h1, *h2;       //å®šä¹‰ä¸‰ä¸ªç»“æ„ä½“æ ‡è®°æŒ‡é’ˆå’Œä¸¤ä¸ªå¤´æŒ‡é’ˆ
+    h1 = h;              //å»ºç«‹ä¸€ä¸ªæ–°çš„é“¾è¡¨ï¼Œå¤´æŒ‡é’ˆä¸ºhï¼ŒæŒ‡å‘åŸé“¾è¡¨çš„ç¬¬ä¸€ä¸ªèŠ‚ç‚¹ï¼Œä¹‹åå°†åŸé“¾è¡¨ä¸­çš„èŠ‚ç‚¹ä¸€ä¸ªä¸€ä¸ªçš„æ’å…¥æ­¤é“¾è¡¨ï¼Œè¿›è¡Œæ’åº
+    h2 = h1->next;                      //å°†åŸæ¥çš„é“¾è¡¨å»ºç«‹æˆå¾…æ’åºé“¾è¡¨
+    h1->next = NULL;                    //æˆªæ–­ç¬¬ä¸€ä¸ªåŸé“¾è¡¨ä¸­çš„èŠ‚ç‚¹
+    while (h2 != NULL)
+    {
+        q = h1;
+        p = q->next;
+        t = h2;                  //ä»å¾…æ’åºé“¾è¡¨ä¸­é€‰å‡ºä¸€ä¸ªèŠ‚ç‚¹å‡†å¤‡æ’å…¥åˆ°æ–°é“¾è¡¨ä¸­
+        h2 = h2->next;           //ç§»åŠ¨å¾…æ’åºé“¾è¡¨çš„å¤´æŒ‡é’ˆï¼Œä¾¿äºè¿›è¡Œä¸‹ä¸€æ¬¡æŒ‘é€‰
+        t->next = NULL;
+        if (t->exp>q->exp)            //åº”æ’å…¥å¤´æŒ‡é’ˆä¹‹å‰çš„æƒ…å†µ
+        {
+            t->next = q;
+            h1 = t;
+            continue;
+        }
+        if (p == NULL&&t->exp <= q->exp) q->next = t;     //åº”æ’å…¥è¡¨å°¾çš„æƒ…å†µ
+        while (p != NULL)
+        {
+            if (t->exp>p->exp)
+            {
+                q->next = t;
+                t->next = p;
+                break;
+            }
+            else
+            {
+                q = q->next;
+                p = p->next;
+            }
+        }
+        if (p == NULL) q->next = t;
+    }
+    return h1;                //æ–°é“¾è¡¨å³ä¸ºæŒ‰é™å¹‚é¡ºåºæ’å¥½çš„é“¾è¡¨ï¼Œè¿”å›å…¶å¤´æŒ‡é’ˆ
 }
-struct node *add(struct node *h1, struct node *h2)   //¶¨Òå¼Ó·¨º¯Êı£¬²¢·µ»Ø½á¹ûµÄÁ´±íµÄÍ·Ö¸Õë
+struct node *add(struct node *h1, struct node *h2)   //å®šä¹‰åŠ æ³•å‡½æ•°ï¼Œå¹¶è¿”å›ç»“æœçš„é“¾è¡¨çš„å¤´æŒ‡é’ˆ
 {
-	struct node *p, *q, *head, *r;          //¶¨Òå½á¹¹ÌåÍ·Ö¸ÕëheadºÍ±ê¼ÇÖ¸Õëp,q,r
-	p = h1;
-	q = h2;
-	head = (struct node *)malloc(sizeof(chainLink));    //Îª½á¹û¶àÏîÊ½·ÖÅäÍ·Ö¸Õë
-	if (p->exp >= q->exp) { head = h1; p = p->next; }
-	else
-	{
-		if (p->exp<q->exp) { head = h2; q = q->next; }
-		else { p->coef = p->coef + q->coef; head = p; p = p->next; q = q->next; }
-	}
-	r = head;
-	while (p != NULL&&q != NULL)
-	{
-		if (p->exp>q->exp) { r->next = p; p = p->next; }
-		else
-		{
-			if (p->exp<q->exp) { r->next = q; q = q->next; }
-			else { p->coef = p->coef + q->coef; r->next = p; p = p->next; q = q->next; }
-		}
-		r = r->next;
-	}
-	if (p == NULL&&q == NULL) r->next = NULL;
-	else
-	{
-		if (p == NULL) r->next = q;
-		if (q == NULL) r->next = p;
-	}
-	return head;
+    struct node *p, *q, *head, *r;          //å®šä¹‰ç»“æ„ä½“å¤´æŒ‡é’ˆheadå’Œæ ‡è®°æŒ‡é’ˆp,q,r
+    p = h1;
+    q = h2;
+    head = (struct node *)malloc(sizeof(chainLink));    //ä¸ºç»“æœå¤šé¡¹å¼åˆ†é…å¤´æŒ‡é’ˆ
+    if (p->exp >= q->exp) { head = h1; p = p->next; }
+    else
+    {
+        if (p->exp<q->exp) { head = h2; q = q->next; }
+        else { p->coef = p->coef + q->coef; head = p; p = p->next; q = q->next; }
+    }
+    r = head;
+    while (p != NULL&&q != NULL)
+    {
+        if (p->exp>q->exp) { r->next = p; p = p->next; }
+        else
+        {
+            if (p->exp<q->exp) { r->next = q; q = q->next; }
+            else { p->coef = p->coef + q->coef; r->next = p; p = p->next; q = q->next; }
+        }
+        r = r->next;
+    }
+    if (p == NULL&&q == NULL) r->next = NULL;
+    else
+    {
+        if (p == NULL) r->next = q;
+        if (q == NULL) r->next = p;
+    }
+    return head;
 }
-
-
+ 
+ 
 void polynomail()
 {
-	struct node *h1, *h2, *h3;//¶¨Òå3¸öÍ·Ö¸Õë£»
-	printf("ÇëÊäÈëµÚÒ»¸ö¶àÏîÊ½£º\n");
-	h1 = create();//´´ÔìµÚÒ»¸öÏßĞÔÁ´±í£»
-	printf("\nÄúÊäÈëµÄµÚÒ»¸ö¶àÏîÊ½Îª£º\n");
-	display(h1);//°Ñ¶àÏîÊ½ÏÔÊ¾³öÀ´£»
-	h1 = order(h1);
-	printf("\n½µÃİÅÅÁĞºóµÄµÚÒ»¸ö¶àÏîÊ½Îª£º\n");
-	display(h1);
-	printf("\n");
-	printf("\nÇëÊäÈëµÚ¶ş¸ö¶àÏîÊ½£º\n");
-	h2 = create();//´´ÔìµÚ¶ş¸öÏßĞÔÁ´±í£»
-	printf("\nÄúÊäÈëµÄµÚ¶ş¸ö¶àÏîÊ½Îª£º\n");
-	display(h2);//°Ñ¶àÏîÊ½ÏÔÊ¾³öÀ´£»
-	h2 = order(h2);
-	printf("\n½µÃİÅÅÁĞºóµÄµÚ¶ş¸ö¶àÏîÊ½Îª£º\n");
-	display(h2);
-	printf("\n");
-	h3 = add(h1, h2);//ÀûÓÃ¼Óº¯Êı½«¶àÏîÊ½Ïà¼Ó£»
-	printf("\nµÚÒ»¸ö¶àÏîÊ½ºÍµÚ¶ş¸ö¶àÏîÊ½Ïà¼Óºó£º\n");
-	display(h3);
-	system("pause");
-	return 0;
+    struct node *h1, *h2, *h3;//å®šä¹‰3ä¸ªå¤´æŒ‡é’ˆï¼›
+    printf("è¯·è¾“å…¥ç¬¬ä¸€ä¸ªå¤šé¡¹å¼ï¼š\n");
+    h1 = create();//åˆ›é€ ç¬¬ä¸€ä¸ªçº¿æ€§é“¾è¡¨ï¼›
+    printf("\næ‚¨è¾“å…¥çš„ç¬¬ä¸€ä¸ªå¤šé¡¹å¼ä¸ºï¼š\n");
+    display(h1);//æŠŠå¤šé¡¹å¼æ˜¾ç¤ºå‡ºæ¥ï¼›
+    h1 = order(h1);
+    printf("\né™å¹‚æ’åˆ—åçš„ç¬¬ä¸€ä¸ªå¤šé¡¹å¼ä¸ºï¼š\n");
+    display(h1);
+    printf("\n");
+    printf("\nè¯·è¾“å…¥ç¬¬äºŒä¸ªå¤šé¡¹å¼ï¼š\n");
+    h2 = create();//åˆ›é€ ç¬¬äºŒä¸ªçº¿æ€§é“¾è¡¨ï¼›
+    printf("\næ‚¨è¾“å…¥çš„ç¬¬äºŒä¸ªå¤šé¡¹å¼ä¸ºï¼š\n");
+    display(h2);//æŠŠå¤šé¡¹å¼æ˜¾ç¤ºå‡ºæ¥ï¼›
+    h2 = order(h2);
+    printf("\né™å¹‚æ’åˆ—åçš„ç¬¬äºŒä¸ªå¤šé¡¹å¼ä¸ºï¼š\n");
+    display(h2);
+    printf("\n");
+    h3 = add(h1, h2);//åˆ©ç”¨åŠ å‡½æ•°å°†å¤šé¡¹å¼ç›¸åŠ ï¼›
+    printf("\nç¬¬ä¸€ä¸ªå¤šé¡¹å¼å’Œç¬¬äºŒä¸ªå¤šé¡¹å¼ç›¸åŠ åï¼š\n");
+    display(h3);
+    system("pause");
+ 
 }
-
+ 
 void phead(void)
 {
-	printf("*******************************************************\n");
-	printf("********************Tom's calclater********************\n");
-	printf("*******************************************************\n");
-	printf("\n***************  ÇëÑ¡ÔñĞèÒªµÄ¼ÆËã²Ù×÷:*****************\n");
+    printf("*******************************************************\n");
+    printf("********************Tom's calclater********************\n");
+    printf("*******************************************************\n");
+    printf("\n***************  è¯·é€‰æ‹©éœ€è¦çš„è®¡ç®—æ“ä½œ:*****************\n");
 }
 void thead(void)
 {
-	printf("*******************************************************\n");
-	printf("ÇëÊäÈëÏàÓ¦µÄÊı×Ö,²¢½øĞĞÒ»²½¼ÆËã: ");
+    printf("*******************************************************\n");
+    printf("è¯·è¾“å…¥ç›¸åº”çš„æ•°å­—,å¹¶è¿›è¡Œä¸€æ­¥è®¡ç®—: ");
 }
-
-void main()  
-{  
-	int i,j,q=0; 
-	int tom;
-	phead();
-	
-	do  
-	{   
-		
-		printf("0¡¢ÍË³ö\n1¡¢½øÖÆ×ª»¯\n2¡¢¼ÆËãÆ÷\n3¡¢Ò»Ôª¶àÏîÊ½¼Ó·¨\n");  
-		thead();
-		scanf("%d",&i);  
-		switch (i)  
-		{  
-		case 1:  thead(); 
-			printf("\nÇëÒª×ª»¯µÄµÄ½øÖÆ:\n0¡¢ÍË³ö\n1¡¢¶ş½øÖÆµ½Ê®½øÖÆ\n2¡¢Ê®½øÖÆµ½¶ş½øÖÆ\n3¡¢°Ë½øÖÆµ½Ê®Áù½øÖÆ\n4¡¢Ê®Áù½øÖÆµ½°Ë½øÖÆ\n");  
-			scanf("%d",&j);  
-			switch(j)  
-			{  
-			case 1: printf("\nÇëÊäÈëÄúÏëÒª×ª»¯µÄÊı£º");  
-				BtoD(); 
-				break;  
-			case 2: printf("\nÇëÊäÈëÄúÏëÒª×ª»¯µÄÊı£º");  
-				DtoB(); 
-				break;  
-			case 3: printf("\nÇëÊäÈëÄúÏëÒª×ª»¯µÄÊı£º");  
-				OtoH(); 
-				break;  
-			case 4: printf("\nÇëÊäÈëÄúÏëÒª×ª»¯µÄÊı£º");  
-				HtoO();
-				break;  
-			case 0:   
-				
-				printf("Ğ»Ğ»Ê¹ÓÃ£¡£¡");  
-				
-			}  
-			break;  
-			case 2: printf("\nÇëÊäÈëÄãÏëÒª¼ÆËãµÄ±í´ïÊ½£¨ÔÚÒÔ¿Õ¸ñ¸ô¿ªÃ¿¸öÊäÈë£¡£©£º\n");
-				tom = EvaluateEcpression();
-				printf("±í´ïÊ½µÄ¼ÆËã½á½çÊÇ %d\n",tom);
-				break;
-			case 3: 
-				polynomail();
-				break;
-			case 0: printf("\nĞ»Ğ»Ê¹ÓÃ£¡\n");  
-				break;
-				
-		}  
-	}while(q==1);  
-}  
-
-
+ 
+int main()
+{
+    int i,j,q=0;
+    int tom;
+    phead();
+ 
+    do
+    {
+ 
+        printf("0ã€é€€å‡º\n1ã€è¿›åˆ¶è½¬åŒ–\n2ã€è®¡ç®—å™¨\n3ã€ä¸€å…ƒå¤šé¡¹å¼åŠ æ³•\n");
+        thead();
+        scanf("%d",&i);
+        switch (i)
+        {
+            case 1:  thead();
+                printf("\nè¯·è¦è½¬åŒ–çš„çš„è¿›åˆ¶:\n0ã€é€€å‡º\n1ã€äºŒè¿›åˆ¶åˆ°åè¿›åˆ¶\n2ã€åè¿›åˆ¶åˆ°äºŒè¿›åˆ¶\n3ã€å…«è¿›åˆ¶åˆ°åå…­è¿›åˆ¶\n4ã€åå…­è¿›åˆ¶åˆ°å…«è¿›åˆ¶\n");
+                scanf("%d",&j);
+                switch(j)
+                {
+                    case 1: printf("\nè¯·è¾“å…¥æ‚¨æƒ³è¦è½¬åŒ–çš„æ•°ï¼š");
+                        BtoD();
+                        break;
+                    case 2: printf("\nè¯·è¾“å…¥æ‚¨æƒ³è¦è½¬åŒ–çš„æ•°ï¼š");
+                        DtoB();
+                        break;
+                    case 3: printf("\nè¯·è¾“å…¥æ‚¨æƒ³è¦è½¬åŒ–çš„æ•°ï¼š");
+                        OtoH();
+                        break;
+                    case 4: printf("\nè¯·è¾“å…¥æ‚¨æƒ³è¦è½¬åŒ–çš„æ•°ï¼š");
+                        HtoO();
+                        break;
+                    case 0:
+ 
+                        printf("è°¢è°¢ä½¿ç”¨ï¼ï¼");
+ 
+                }
+                break;
+            case 2: printf("\nè¯·è¾“å…¥ä½ æƒ³è¦è®¡ç®—çš„è¡¨è¾¾å¼ï¼ˆåœ¨ä»¥ç©ºæ ¼éš”å¼€æ¯ä¸ªè¾“å…¥ï¼ï¼‰ï¼š\n");
+                tom = EvaluateEcpression();
+                printf("è¡¨è¾¾å¼çš„è®¡ç®—ç»“æœæ˜¯ %d\n",tom);
+                break;
+            case 3:
+                polynomail();
+                break;
+            case 0: printf("\nè°¢è°¢ä½¿ç”¨ï¼\n");
+                break;
+ 
+        }
+    }while(q==1);
+ 
+    return 0;
+}
