@@ -6,12 +6,11 @@
 int main()
 {
     int i,j,q=0;
-    int tom;
+    int result;
     phead();
 
     do
     {
-
         printf("0、退出\n1、进制转化\n2、计算器\n3、一元多项式加法\n");
         thead();
         scanf("%d",&i);
@@ -35,22 +34,24 @@ int main()
                         HtoO();
                         break;
                     case 0:
-
                         printf("谢谢使用！！");
-
+                        break;
+                    default:
+                        return 0;
                 }
                 break;
             case 2: printf("\n请输入你想要计算的表达式（在以空格隔开每个输入！）：\n");
-                tom = EvaluateEcpression();
-                printf("表达式的计算结界是 %d\n",tom);
+                result = EvaluateEcpression();
+                printf("表达式的计算结界是 %d\n",result);
                 break;
             case 3:
                 polynomail();
                 break;
             case 0: printf("\n谢谢使用！\n");
                 break;
-
+            default:
+                return 0;
         }
-    }while(q==1);
+    }while( 1 == q );
     return 0;
 }
